@@ -16,20 +16,15 @@ const anthropic = new Anthropic({
 // Make request to anthropic
 export default async function anthropicRequest(
     userMessage: string,
-    systemPrompt?: string,
-    selectedModel?: string,
-    maxTokensToSample?: number,
-    temperature?: number
+    systemPrompt: string = DATA_GENERATION_SYSTEM_PROMPT,
+    selectedModel: string = "claude-2.1",
+    maxTokensToSample: number = 1000,
+    temperature: number = 0.2,
 ): Promise<string> {
 
     console.info("Making request to anthropic");
 
-    // Set defaults
-    if (!selectedModel) { selectedModel = "claude-2.1" }
-    if (!maxTokensToSample) { maxTokensToSample = 1000 }
-    if (!temperature) { temperature = 0.2 }
     if (!userMessage) { throw `No user message provided`; }
-    if (!systemPrompt) { systemPrompt = DATA_GENERATION_SYSTEM_PROMPT; }
 
     try {
         // Make request
