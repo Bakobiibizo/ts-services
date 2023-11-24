@@ -1,5 +1,10 @@
 import fs from "fs";
 
+export type Count = {
+    count: number 
+    countFilesInDir: (directory: string) => number
+}
+
 export default class TheCount {
     count: number;
     constructor(count: number) {
