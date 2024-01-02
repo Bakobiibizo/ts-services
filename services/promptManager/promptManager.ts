@@ -1,22 +1,11 @@
 import { PromptListItem } from "./promptManager.dt"
 import { GenericList } from "../commonTypes.dt";
 
-import {
-    BEE_PERSONA,
-    INVENTORY_COLLECTION,
-    CREATING_ESTIMATE,
-    FINAL_STAGE
-} from './prompts'
-
-export class PromptManager {
+class PromptManager {
     promptList: GenericList<PromptListItem>;
 
     constructor() {
         this.promptList = new GenericList<PromptListItem>();
-        this.addPrompt("beePersona", BEE_PERSONA);
-        this.addPrompt("inventoryCollection", INVENTORY_COLLECTION);
-        this.addPrompt("creatingEstimate", CREATING_ESTIMATE);
-        this.addPrompt("finalStage", FINAL_STAGE);
     }
     addPrompt(promptName: string, prompt: string): string {
         this.promptList.addItem({ name: promptName, prompt: prompt });
@@ -26,13 +15,10 @@ export class PromptManager {
         return this.promptList;
     }
 
-    getPrompt(promptName: string): string {
-        const item = this.promptList.getItems().find((item) => item.name === promptName);
-        if (item) {
-            return item.prompt;
-        }
-        return "prompt not found";
+    getPrompt(item: PromptListItem): PromptListItem {
+        return this.promptList.getItem(item);
     }
+
     updatePrompt(promptName: string, newPrompt: string): string {
         const item = this.promptList.getItems().find((item) => item.name === promptName);
         if (item) {
@@ -45,7 +31,11 @@ export class PromptManager {
     removePrompt(promptName: string): string {
         const initialLength = this.promptList.getItems().length;
         const promptList = this.promptList.getItems().filter((item) => item.name !== promptName);
-        this.promptList.setItems(promptList);
+        this.promptList.setItems(...promptList);
         return this.promptList.getItems().length < initialLength ? "prompt removed" : "prompt not found";
     }
 }
+
+const promptManager = new PromptManager();
+
+export default promptManager
