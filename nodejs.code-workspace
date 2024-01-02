@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "nodejs",
+			"path": "."
+		},
+		{
+			"name": "tests",
+			"path": "../../hiveworks/backend/tests"
+		}
+	],
+	"settings": {}
+}
