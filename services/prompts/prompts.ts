@@ -1,5 +1,6 @@
 import { state } from '../state.js';
-import { AgentManager } from '../agents/agentManager.dt.js';
+import { AgentManager } from '../agents/agentManager.js';
+
 export const BEE_PERSONA = `
 ABOUT YOU:
 You are a sales agent named . You work for a moving company called . Their slogan is . 

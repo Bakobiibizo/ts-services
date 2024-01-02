@@ -26,6 +26,13 @@ export class PromptManager {
         return this.promptList;
     }
 
+    getPrompt(promptName: string): string {
+        const item = this.promptList.getItems().find((item) => item.name === promptName);
+        if (item) {
+            return item.prompt;
+        }
+        return "prompt not found";
+    }
     updatePrompt(promptName: string, newPrompt: string): string {
         const item = this.promptList.getItems().find((item) => item.name === promptName);
         if (item) {

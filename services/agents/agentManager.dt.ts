@@ -1,17 +1,19 @@
+import { GenericList } from "../commonTypes.dt"
+import { PromptListItem } from "../prompts/promptManager.dt"
 
 export type Agent = {
     name: string
     description: string
-    promptlist: [
-    ]
+    promptlist: PromptListItem[] | string[]
 }
 
+export class AgentList extends GenericList<Agent> {
+    agentList: Agent[];
 
-export type Manager = {
-    agentList: Agent[]
+    constructor(agent: Agent) {
+        super();
+        this.agentList = [];
+        this.addItem(agent);
+    }
 
-    add(agent: Agent): string
-    get(): [Agent]
-    update(agent: Agent): string
-    remove(agent: Agent): string
 }
