@@ -22,7 +22,13 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.10.0",
+    "@jest-mock/express": "^2.0.2",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@types/jest": "^29.5.10",
     "axios": "^1.6.2",
-    "state": "^0.2.0"
+    "eslint-plugin-jest": "^27.6.0",
+    "jest-cli": "^29.7.0",
+    "state": "^0.2.0",
+    "ts-jest": "^29.1.1"
   }
 }
