@@ -1,5 +1,5 @@
 import { AgentManager, Agent } from "./agentManagement/agentManager";
-import { IDENTIFY_HTML_PROMPT } from "./promptManager/prompts/qaPrompts";
+import { IDENTIFY_HTML_PROMPT } from "./promptManagement/prompts/qaPrompts";
 
 export const agentManager = new AgentManager();
 

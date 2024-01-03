@@ -2,20 +2,19 @@ export class GenericList<T> {
     private items: T[] = [];
 
     addItem(item: T): void {
-        this.setItems(item)
+        this.items.push(item);
     }
 
     getItems(): T[] {
         return this.items
     }
 
-    getItem(item: T): T {
-        if (!item) {
+    getItem(key: string): any {
+        if (!key) {
             return this.items[0];
         }
         else {
-            // @ts-ignore
-            return this.items.find((item = item) => item === item);
+            return this.setItems(this.items.find((item) => item === key) || this.items[0]);
         }
     }
 
