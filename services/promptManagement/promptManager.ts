@@ -21,8 +21,8 @@ class PromptManager {
         return this.promptList;
     }
 
-    getPrompt(item: PromptListItem): PromptListItem {
-        return this.promptList.getItem(item);
+    getPrompt(key: string): PromptListItem {
+        return this.promptList.getItem(key);
     }
 
     updatePrompt(promptName: string, newPrompt: string): string {
@@ -42,12 +42,10 @@ class PromptManager {
     }
 }
 
+const PromptListManager = new PromptManager();
+
+PromptListManager.addPromptList(BeePromptList);
+PromptListManager.addPromptList(quackersPromptList);
 
 
-const promptManager = new PromptManager();
-
-promptManager.addPromptList(BeePromptList);
-promptManager.addPromptList(quackersPromptList);
-
-
-export default promptManager
+export default PromptListManager

@@ -1,5 +1,5 @@
 import { GenericList } from "../commonTypes.dt"
-import { PromptList } from "../promptManagement/promptManager.dt"
+import { PromptList, PromptListItem } from "../promptManagement/promptManager.dt"
 
 export type VariableListItem = {
     [key: string]: any
@@ -13,16 +13,28 @@ export class VariablesList extends GenericList<VariableListItem> {
         }
     }
 }
-export type Agent = {
+
+
+export class Agent {
     name: string
     description: string
     promptList: PromptList
-    variablesList: VariablesList
-}
-
-export class AgentList extends GenericList<Agent> {
-    constructor(agent: Agent) {
-        super();
-        this.addItem(agent);
+    variablesList: VariableListItem[]
+    constructor(name: string, description: string, promptList: PromptList, variablesList: [VariableListItem]) {
+        this.name = name
+        this.description = description
+        this.promptList = promptList
+        this.variablesList = variablesList
     }
 }
+
+
+export class AgentList extends GenericList<Agent> {
+    constructor(agents: Agent[]) {
+        super();
+        for (const agent of agents) {
+            this.addItem(agent);
+        }
+    }
+}
+

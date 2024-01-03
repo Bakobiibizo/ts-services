@@ -1,4 +1,3 @@
-import { state } from '../state.js';
 import { PromptListItem } from '../promptManager.dt';
 import { VariablesList } from '../../agentManagement/agentManager.dt';
 
