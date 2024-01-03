@@ -1,23 +1,19 @@
 import { Agent, AgentList } from './agentManager.dt';
-import {
-    IDENTIFY_HTML_PROMPT
-} from '../promptManager/prompts/qaPrompts';
+import BeeAgent from './agents/bee';
+import QuackersAgent from './agents/quackers';
+import { AnthropicDataGenerator } from '../testDataGenerator/generationPrompts';
 
 
-export const qauckers: Agent = {
-    name: "qauckers",
-    description: "A Quality Assurance agent configured to automate playwrite testing.",
-    promptlist: [
-        promptManager.getPrompt(IDENTIFY_HTML_PROMPT)
-    ]
-}
 class AgentManager {
     agentList: AgentList;
-    constructor() {
-        this.agentList = new AgentList(bee);
-        this.agentList.addItem(qauckers);
+    constructor(agent: Agent) {
+        this.agentList = new AgentList(agent);
     }
 }
 
-const agentManger = new AgentManager();
-export const agentManger
+const agentManager = new AgentManager(new BeeAgent());
+
+
+agentManager.agentList.addItem(BeeAgent)
+agentManager.agentList.addItem(QuackersAgent)
+export default agentManager;

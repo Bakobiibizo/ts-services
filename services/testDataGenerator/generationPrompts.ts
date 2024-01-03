@@ -9,7 +9,7 @@ You will receive a schema of a data structure or a short explanation of what kin
 
 SCHEMA:
 `
-import anthropicRequest from "../anthropic/anthropic";
+import anthropicRequest from "../inferenceManagement/anthropic/anthropic";
 import { DATA_GENERATION_REQUEST_PROMPT } from './dataGenerationRequestPrompt';
 import fs from "fs";
 import TheCount from "";
