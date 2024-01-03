@@ -1,14 +1,13 @@
-import { PromptListItem } from "./promptManager.dt"
+import { PromptListItem, PromptList } from './promptManager.dt';
 import { GenericList } from "../commonTypes.dt";
-import BeePromptList from "./prompts/beePrompt";
-import quackersPromptList from "./prompts/qaPrompts";
-
+import { qauackersPromptList } from './prompts/qaPrompts';
+import { beePromptList } from "./prompts/beePrompt";
 
 class PromptManager {
-    promptList: GenericList<PromptListItem>;
+    promptList: PromptList;
 
     constructor() {
-        this.promptList = new GenericList<PromptListItem>();
+        this.promptList = new PromptList([]);
     }
     addPrompt(promptName: string, prompt: string): string {
         this.promptList.addItem({ name: promptName, prompt: prompt });
@@ -44,8 +43,6 @@ class PromptManager {
 
 const PromptListManager = new PromptManager();
 
-PromptListManager.addPromptList(BeePromptList);
-PromptListManager.addPromptList(quackersPromptList);
-
+PromptListManager.addPromptList([qauackersPromptList, beePromptList]);
 
 export default PromptListManager

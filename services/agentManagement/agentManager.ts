@@ -1,13 +1,19 @@
-import { Agent, AgentList } from './agentManager.dt';
+import { Agent, AgentList, VariablesList } from './agentManager.dt';
+import { PromptList } from '../promptManagement/promptManager.dt';
 
 
 export class AgentManager extends AgentList {
-    agentList: AgentList
-    constructor(agents: Agent[]) {
-        super(agents);
-        this.agentList = new AgentList(agents);
+    constructor() {
+        super([]);
+    }
+    createAgent(agentName: string, description: string, promptList: PromptList, variableList: VariablesList) {
+        this.addItem(new Agent(agentName, description, promptList, variableList))
     }
 }
-export const agentManager = new AgentManager([]);
 
+const agentManager = new AgentManager()
+
+export function getAgentManager() {
+    return agentManager
+}
 

@@ -1,26 +1,29 @@
 import { GenericList } from "../commonTypes.dt"
-import { PromptList, PromptListItem } from "../promptManagement/promptManager.dt"
+import { PromptList } from "../promptManagement/promptManager.dt"
 
 export type VariableListItem = {
     [key: string]: any
 }
 
 export class VariablesList extends GenericList<VariableListItem> {
-    constructor(variables: VariableListItem) {
+    variablesList: VariablesList
+    constructor(variables: VariableListItem[]) {
         super();
-        for (const [key, value] of Object.entries(variables)) {
-            this.addItem({ [key]: value });
+        this.variablesList = new VariablesList(variables);
+        for (const variable of variables) {
+            this.addItem(variable);
         }
     }
 }
+
 
 
 export class Agent {
     name: string
     description: string
     promptList: PromptList
-    variablesList: VariableListItem[]
-    constructor(name: string, description: string, promptList: PromptList, variablesList: [VariableListItem]) {
+    variablesList: VariablesList
+    constructor(name: string, description: string, promptList: PromptList, variablesList: VariablesList) {
         this.name = name
         this.description = description
         this.promptList = promptList
@@ -32,9 +35,9 @@ export class Agent {
 export class AgentList extends GenericList<Agent> {
     constructor(agents: Agent[]) {
         super();
-        for (const agent of agents) {
+        agents.forEach((agent) => {
             this.addItem(agent);
-        }
+        })
     }
 }
 

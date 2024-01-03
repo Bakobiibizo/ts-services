@@ -1,8 +1,7 @@
-import { VariableListItem, VariablesList } from '../agentManager.dt';
-import quackersPromptList from '../../promptManagement/prompts/qaPrompts';
-import { PromptList } from '../../promptManagement/promptManager.dt';
-import { Agent } from '../agentManager.dt';
-import { AgentManager } from '../agentManager';
+import { Agent, VariableListItem, VariablesList } from '../agentManager.dt';
+import { qauackersPromptList } from '../../promptManagement/prompts/qaPrompts';
+import { getAgentManager } from '../agentManager';
+
 
 const variablesList: VariableListItem = [
     {
@@ -17,6 +16,6 @@ qauackersVariablesList.setItems(...qauackersVariablesList.getItems(), variablesL
 const qauackersName = "QAuackers"
 const qauackersDescription = "Quality assurance specialist configured to automatically generate end to end tests using playwright"
 
-const QAuackers = new Agent(qauackersName, qauackersDescription, quackersPromptList, qauackersVariablesList)
+export const QAuackersAgent = new Agent(qauackersName, qauackersDescription, qauackersPromptList, qauackersVariablesList)
 
-agentManager.setItems(qauackersName, qauackersDescription, quackersPromptList, qauackersVariablesList)
+getAgentManager().createAgent(qauackersName, qauackersDescription, qauackersPromptList, qauackersVariablesList)
