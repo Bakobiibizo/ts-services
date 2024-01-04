@@ -6,8 +6,9 @@ import { beePromptList } from "./prompts/beePrompt";
 class PromptManager {
     promptList: PromptList;
 
-    constructor() {
+    constructor(items: PromptListItem) {
         this.promptList = new PromptList([]);
+        this.promptList.setItems(...[items])
     }
     addPrompt(promptName: string, prompt: string): string {
         this.promptList.addItem({ name: promptName, prompt: prompt });
@@ -41,8 +42,8 @@ class PromptManager {
     }
 }
 
-const PromptListManager = new PromptManager();
+const promptListManager = new PromptManager([]);
 
-PromptListManager.addPromptList([qauackersPromptList, beePromptList]);
+promptListManager.addPromptList([qauackersPromptList, beePromptList]);
 
-export default PromptListManager
+export default promptListManager

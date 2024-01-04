@@ -5,16 +5,25 @@ export type VariableListItem = {
     [key: string]: any
 }
 
-export class VariablesList extends GenericList<VariableListItem> {
-    variablesList: VariablesList
-    constructor(variables: VariableListItem[]) {
-        super();
-        this.variablesList = new VariablesList(variables);
-        for (const variable of variables) {
-            this.addItem(variable);
-        }
+export class VariableItem {
+    name: string
+    value: string
+    [key: string]: any
+    constructor(name: string, value: string) {
+        this.name = name
+        this.value = value
     }
 }
+
+export class VariablesList extends GenericList<VariableListItem> {
+    variablesList: VariableListItem[]
+    constructor(variables: VariableListItem[]) {
+        super();
+        this.variablesList = [];
+        this.setItems(...variables);
+    }
+}
+
 
 
 

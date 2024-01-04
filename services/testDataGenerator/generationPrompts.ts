@@ -9,10 +9,10 @@ You will receive a schema of a data structure or a short explanation of what kin
 
 SCHEMA:
 `
-import anthropicRequest from "../inferenceManagement/anthropic/anthropic";
+import anthropicRequest from "../inferenceManagement/anthropic/anthropicGenerator";
 import { DATA_GENERATION_REQUEST_PROMPT } from './dataGenerationRequestPrompt';
 import fs from "fs";
-import TheCount from "";
+import TheCount from "../utils/theCount/counter";
 
 console.info("Initializing Data Generation");
 
@@ -86,10 +86,10 @@ export class AnthropicDataGenerator {
         if (outputPath) { this.setDataFilePath(outputPath) };
 
         // Construct the prompt
-        this.prompt = this.buildPrompt(dataSchemaPrompt);
+        this.prompt = this.requestPrompt
 
         // Generate data
-        const response = await anthropicRequest(this.prompt);
+        const response = await anthropicRequest(this.requestPrompt)
 
         // Clean data
         const generatedData = response.split('```')[1].trim();

@@ -8,7 +8,7 @@ export type State = {
 export class CreateState implements State {
     state: string
     content: string
-    constructor(state: string, content: string): void {
+    constructor(state: string, content: string) {
         this.state = state
         this.content = content
     }
@@ -30,7 +30,7 @@ export default class StateManager implements Manager {
     state = new CreateState("init", "value")
     states: [State]
     states_path: string
-    private constructor(file_path: string = "./states.json"): void {
+    private constructor(file_path: string = "./states.json") {
         this.states_path = file_path
         this.states = this.get()
     }

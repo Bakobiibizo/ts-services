@@ -5,8 +5,10 @@ export type PromptListItem = {
 }
 
 export class PromptList extends GenericList<PromptListItem> {
-    constructor(prompt: PromptListItem[]) {
+    constructor(prompts: PromptListItem[]) {
         super();
-        this.addItem(prompt);
+        prompts.forEach((prompts) => {
+            this.addItem(prompts);
+        })
     }
 }
