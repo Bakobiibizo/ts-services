@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import * as dotenv from 'dotenv';
 import { getAgentManager } from "./agentManagement/agentManager";
-import { qauackersAgent } from "./agentManagement/agents/QAuackers";
+import { qauackersAgent } from "./variableManagement/variables/QAuackers";
 import * as fs from "fs";
 
 dotenv.config();

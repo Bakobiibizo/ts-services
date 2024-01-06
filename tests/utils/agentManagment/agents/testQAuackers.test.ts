@@ -1,7 +1,7 @@
-import { qauackersPromptList } from "../../../../services/promptManagement/prompts/qaPrompts";
+import { qauackersPromptList } from "../../../../services/promptManagement/prompts/qauackersPromptList";
 
-import { Agent, VariableListItem, VariablesList } from "../../../../services/agentManagement/agentManager.dt";
-import { qauackersVariableList } from '../../../../services/agentManagement/agents/QAuackers';
+import { Agent, VariableListItem, VariablesList } from "../../../../services/agentManagement/Agents.dt";
+import { qauackersVariableList } from '../../../../services/variableManagement/variables/QAuackers';
 
 describe('code snippet', () => {
 
