@@ -1,20 +1,23 @@
+import { Generator } from '../Generator.dt';
 import { HTTPClient } from '../HTTPClient';
+import { OAIMessage } from '../openaiAPI/OAIRequest.dt';
 
-class OllamaRequestGenerator {
+class OllamaRequestGenerator extends Generator {
     prompt: string;
     systemPrompt: string;
-    completePrompt: string;
+    contextWindow: OAIMessage[];
     url: string;
     fullResponse: any[];
     httpClient: HTTPClient;
 
     constructor(systemPrompt: string, url: string) {
+        super();
         this.prompt = '';
         this.systemPrompt = systemPrompt;
-        this.completePrompt = `${this.systemPrompt}${this.prompt}`;
+        this.contextWindow = [];
         this.url = url;
         this.fullResponse = [];
-        this.httpClient = new HTTPClient(url);
+        this.httpClient = new HTTPClient(this.url);
     }
 
     async generateData() {

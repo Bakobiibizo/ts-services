@@ -21,4 +21,3 @@ export class AgentList extends GenericList<Agent> {
         this.setItems(...agents)
     }
 }
-

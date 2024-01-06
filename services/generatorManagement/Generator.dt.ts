@@ -1,31 +1,39 @@
 import { HTTPClient } from './HTTPClient';
 import { GenericList } from '../commonTypes.dt';
+import OllamaRequestGenerator from './agentArtificial/OllamaRequestGenerator';
+import { AnthropicGenerator } from './anthropic/anthropicGenerator';
+import { OpenAIGenerator } from './openaiAPI/assistants';
+import { OAIGenerator } from './openaiAPI/OAIGenerator';
+import { OAIMessage } from './openaiAPI/OAIRequest.dt';
 
 export class Generator {
     prompt: string;
     systemPrompt: string;
-    completePrompt: string;
+    contextWindow: OAIMessage[];
     url: string;
     fullResponse: any[];
     httpClient: HTTPClient;
     constructor() {
-        this.prompt = '';
+        this.prompt = "";
         this.systemPrompt = '';
-        this.completePrompt = '';
+        this.contextWindow = [];
         this.url = '';
         this.fullResponse = [];
         this.httpClient = new HTTPClient('');
     }
-    setPrompt(prompt: string) {
+    setPrompt(prompt: string, role: string = "user") {
         this.prompt = prompt;
-        this.completePrompt = `${this.systemPrompt}${this.prompt}`;
+        this.contextWindow.push(new OAIMessage(role, prompt))
     }
     setSystemPrompt(systemPrompt: string) {
+        this.contextWindow.shift();
         this.systemPrompt = systemPrompt;
-        this.completePrompt = `${this.systemPrompt}${this.prompt}`;
+        this.contextWindow.unshift({ role: "system", content: systemPrompt })
     }
-    setCompletePrompt(completePrompt: string) {
-        this.completePrompt = completePrompt;
+    setContextWindow() {
+        this.contextWindow = [];
+        this.setSystemPrompt(this.systemPrompt);
+        this.setPrompt(this.prompt)
     }
     setUrl(url: string) {
         this.url = url;
@@ -36,7 +44,7 @@ export class Generator {
     }
     async generateData() {
         try {
-            const response = await this.httpClient.post('', { prompt: this.completePrompt });
+            const response = await this.httpClient.post('', { prompt: this.contextWindow });
             response.data.on('data', (chunk: any) => {
                 this.fullResponse.push(chunk);
             });
@@ -50,8 +58,12 @@ export class Generator {
     }
 }
 export class GeneratorList extends GenericList<Generator> {
-    constructor(generator: Generator[]) {
+    constructor(generators: Generator[]) {
         super();
-        this.setItems(...generator);
+        this.setItems(...generators);
     }
 }
+
+export const generatorList = new GeneratorList([
+    OllamaRequestGenerator, OAIGenerator, AnthropicGenerator
+])

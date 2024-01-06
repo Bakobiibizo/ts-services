@@ -2,21 +2,25 @@ import * as dotenv from "dotenv";
 import { HTTPClient } from '../HTTPClient'
 import { AnthropicPromptTemplate } from "./anthropicPromptTemplate";
 import { dataGeneratorPromptList } from '../../promptManagement/prompts/dataGeneratorPromptList';
+import { Generator } from "../Generator.dt";
 
 console.info("Initializing Anthropic");
 
 // load environment variables
 dotenv.config();
 
-export class AnthropicGenerator {
-    private httpClient: HTTPClient;
-    private apiKey: string;
-    private apiUrl: string;
+export class AnthropicGenerator extends Generator {
+    apiKey: string;
 
     constructor() {
+        super();
         this.apiKey = process.env.ANTHROPIC_API_KEY || '';
-        this.apiUrl = "https://api.anthropic.com/v1/complete";
-        this.httpClient = new HTTPClient(this.apiUrl);
+        this.prompt = "";
+        this.systemPrompt = "";
+        this.completePrompt = "";
+        this.url = "https://api.anthropic.com/v1/complete";
+        this.fullResponse = [];
+        this.httpClient = new HTTPClient(this.url);
     }
 
     // Make request to anthropic
@@ -60,3 +64,4 @@ export class AnthropicGenerator {
         }
     }
 }
+export default AnthropicGenerator

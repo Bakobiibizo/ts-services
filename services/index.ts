@@ -1,2 +1,6 @@
-import { agentManager } from "./AgentManager";
-import { inferenceManager } from "./inferenceManagement";
+import { GeneratorManager } from './GeneratorManager';
+import { QAuackersAgent } from './agentManagement/agents/QAuackers';
+
+export const Generator = GeneratorManager
+
+Generator.getItems("QAuackersAgent")
