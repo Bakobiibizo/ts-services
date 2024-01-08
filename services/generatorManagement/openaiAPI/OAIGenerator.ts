@@ -1,62 +1,112 @@
-import { Generator, GeneratorList } from "../Generator.dt";
+import { Generator } from "../Generator.dt";
 import OpenAI from "openai";
 import * as dotenv from 'dotenv';
-import { OAIMessage, OAIMessages, OAIRequest } from './OAIRequest.dt';
 import { HTTPClient } from '../HTTPClient';
+import { ChatCompletionContentPartImage, ChatCompletionFunctionMessageParam, ChatCompletionMessageParam, ChatCompletionMessage, ChatCompletionUserMessageParam } from 'openai/resources';
 
 dotenv.config();
 
 export class OAIGenerator extends Generator {
+    prompt: string;
+    systemPrompt: string;
+
     api_key?: string;
+    url: string;
     openai: OpenAI;
-    constructor() {
+    fullResponse: any[];
+    httpClient: HTTPClient;
+    contextWindow: []
+    temperature: number
+    max_tokens: number
+    top_p: number
+    frequency_penalty: number
+    presence_penalty: number
+    constructor(url: string = "https://api.openai.com/v1/chat/completions") {
         super();
+        this.prompt = "";
+        this.systemPrompt = '';
         this.api_key = process.env.OPENAI_API_KEY;
-        this.openai = new OpenAI({ apiKey: this.api_key });
-        this.prompt = ""
-        this.systemPrompt = ""
-        this.url = "https://api.openai.com/v1/chat/completions"
+        this.url = url
+        this.openai = new OpenAI({ apiKey: this.api_key, baseURL: this.url });
         this.fullResponse = [];
         this.httpClient = new HTTPClient(this.url);
+        this.contextWindow = [];
+        this.temperature = 0.2
+        this.max_tokens = 32000
+        this.top_p = 1
+        this.frequency_penalty = 0
+        this.presence_penalty = 0
     }
-    constructMessage(role: string, content: string) {
-        return { role: role, content: content };
-    }
-    constructOAIRequest(systemPrompt: string, userMessages: OAIMessage[], model: string, temperature: number, max_tokens: number, top_p: number, frequency_penalty: number, presence_penalty: number, stop: string[]) {
-        this.constructMessage("system", systemPrompt)
 
+    setPrompt(prompt: string) {
+        this.prompt = prompt
+        const message = this.constructMessage("user", prompt)
+        this.contextWindow.push(message)
+        return message
+    }
+
+    setSystemPrompt(prompt: string) {
+        this.systemPrompt = prompt
+    }
+
+    setModel(model: string) {
+        this.model = model
+    }
+
+    setTemperature(temperature: number) {
+        this.temperature = temperature
+    }
+
+    setMaxTokens(max_tokens: number) {
+        this.max_tokens = max_tokens
+    }
+
+    setTopP(top_p: number) {
+        this.top_p = top_p
+    }
+
+    setFrequencyPenalty(frequency_penalty: number) {
+        this.frequency_penalty = frequency_penalty
+    }
+
+    setPresencePenalty(presence_penalty: number) {
+        this.presence_penalty = presence_penalty
+    }
+
+    constructMessageParam(role: "function" | "system" | "user" | "assistant" | "tool", content: string, name?: string) {
+        const message = {
+            role: role,
+            content: content,
+            name: name ? name : ""
+        }
+        return message
+    }
+
+
+    constructFullPrompt(model: string = "ollama-mixtral", temperature: number = 0.7, max_tokens: number = 256, top_p: number = 1, frequency_penalty: number = 0, presence_penalty: number = 0) {
+        const messages = [this.constructMessage("system", this.systemPrompt), ...this.contextWindow, this.constructMessage("user", this.prompt)];
         return {
             model: model,
-            messages: userMessages,
+            messages: messages,
             temperature: temperature,
             max_tokens: max_tokens,
             top_p: top_p,
             frequency_penalty: frequency_penalty,
-            presence_penalty: presence_penalty,
-            stop: stop
+            presence_penalty: presence_penalty
         }
-    }
-    openaiRequest(OAIRequest: OAIRequest) {
-        const response = this.openai.chat.completions.create({
-            model: OAIRequest.model,
-            messages: OAIRequest.messages,
-            temperature: OAIRequest.temperature,
-            max_tokens: OAIRequest.max_tokens,
-            top_p: OAIRequest.top_p,
-            frequency_penalty: OAIRequest.frequency_penalty,
-            presence_penalty: OAIRequest.presence_penalty,
-            stop: OAIRequest.stop
-        })
 
-            (OAIRequest)
+    }
+    async openaiRequest() {
+        const oaiRequest = this.constructFullPrompt(this.model, this.temperature, this.max_tokens, this.top_p, this.frequency_penalty, this.presence_penalty);
+        const response = await this.openai.chat.completions.create(oaiRequest)
             .then((response) => {
-                resolve(response.data.choices[0].text);
+                if (response.object === "chat.completion") {
+                    return response.choices[0].message
+                }
             })
             .catch((error) => {
-                reject(error);
-            });
+                console.error('Error during generateData:', error);
+            })
+        return response
     }
-}
-
-
 }

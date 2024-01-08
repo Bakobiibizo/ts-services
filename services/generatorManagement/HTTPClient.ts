@@ -1,25 +1,17 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios from "axios";
 
 export class HTTPClient {
-    private client: AxiosInstance;
+    private client
+    options: any
 
-    constructor(baseURL: string) {
-        this.client = axios.create({
-            baseURL: baseURL,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-    }
-
-    async post(endpoint: string, data: any): Promise<AxiosResponse> {
-        try {
-            return await this.client.post(endpoint, data, {
-                responseType: 'stream'
-            });
-        } catch (error) {
-            console.error('Error in HTTP POST:', error);
-            throw error; // Rethrow for further handling if needed
+    constructor(model = 'dolphin-mistral', prompt = 'hi there') {
+        this.options = {
+            method: 'POST',
+            url: 'https://2f89d1242d82.ngrok.app/api/generate',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'insomnia/2023.5.8' },
+            data: { model: model, prompt: prompt, stream: false },
         }
+        this.client = axios.request
     }
+    async makeRequest() { return await this.client(this.options) };
 }

@@ -1,38 +1,34 @@
 import { Generator } from '../Generator.dt';
 import { HTTPClient } from '../HTTPClient';
-import { OAIMessage } from '../openaiAPI/OAIRequest.dt';
+import * as os from "os";
 
-class OllamaRequestGenerator extends Generator {
+export class OllamaRequestGenerator extends Generator {
     prompt: string;
     systemPrompt: string;
-    contextWindow: OAIMessage[];
+    contextWindow: [];
     url: string;
     fullResponse: any[];
-    httpClient: HTTPClient;
 
-    constructor(systemPrompt: string, url: string) {
+    constructor() {
         super();
         this.prompt = '';
-        this.systemPrompt = systemPrompt;
+        this.systemPrompt = '';
         this.contextWindow = [];
-        this.url = url;
+        this.url = "https://api.openai.com/v1/api/chat/completions" //'https://2f89d1242d82.ngrok.app/api/generate';
         this.fullResponse = [];
-        this.httpClient = new HTTPClient(this.url);
     }
 
-    async generateData() {
-        try {
-            const response = await this.httpClient.post('', { prompt: this.completePrompt });
-            response.data.on('data', (chunk: any) => {
-                this.fullResponse.push(chunk);
-            });
-            response.data.on('end', () => {
-                const output = Buffer.concat(this.fullResponse).toString();
-                console.log(output);
-            });
-        } catch (error) {
-            console.error('Error during generateData:', error);
+    constructFullPrompt(prompt: string, model: string = "ollama-mixtral", temperature: number = 0.7, max_tokens: number = 256, top_p: number = 1, frequency_penalty: number = 0, presence_penalty: number = 0) {
+        this.constructMessage("user", prompt)
+        let messages = ""
+        for (let i of this.contextWindow) {
+            messages += i["role"] + ": " + i["content"] + os.EOL
         }
+        const oaiRequest = {
+            model: model,
+            prompt: messages,
+        }
+        return oaiRequest
     }
+
 }
-export default OllamaRequestGenerator

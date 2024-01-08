@@ -1,44 +1,41 @@
+import { ChatCompletionStreamingRunner } from 'openai/lib/ChatCompletionStreamingRunner';
+import { ChatCompletionMessageParam, ChatCompletion, ChatCompletionMessage, ChatCompletionFunctionMessageParam } from 'openai/resources';
+import { MessageCreateParams, Messages } from 'openai/resources/beta/threads/messages/messages';
+
 export class OAIMessage {
-    role: string
-    content: string
-    constructor(role: string, content: string) {
+    constructor(public role: "assistant" | "user" | "system" | "function" | "tool", public content: string, public name?: string) {
         this.role = role
         this.content = content
+        this.name = name
     }
-}
-export class OAIMessages extends Array<OAIMessage> {
-    constructor() {
-        super();
-    }
-    create(role: string, content: string) {
-        this.push(new OAIMessage(role, content))
-        return this
-    }
-    add(message: OAIMessage) {
-        this.push(message)
-        return this
-    }
-    remove(index: number) {
-        this.splice(index, 1)
-        return this
-    }
-}
 
+    createMessage(role: string, content: string, name?: string) {
+        this.role = "assistant" || role
+        this.content = content
+        this.name = name ?? undefined
+        const message = {
+            role: role,
+            content: content,
+            name: name
+        }
+        return message
+    }
+}
 
 export class OAIRequest {
     model: string
-    messages: OAIMessages
+    messages: ChatCompletionMessageParam[]
     temperature: number
     max_tokens: number
     top_p: number
     frequency_penalty: number
     presence_penalty: number
     stop: string[]
-    constructor(model: string = "gpt-4", messages: OAIMessage[], temperature: number = 0.2, max_tokens: number = 32000, top_p: number = 1, frequency_penalty: number = 0, presence_penalty: number = 0, stop: string[] = ["User: ", "Assistant: "]) {
+    constructor(model: string = "gpt-4", messages: ChatCompletionMessageParam[], temperature: number = 0.2, max_tokens: number = 32000, top_p: number = 1, frequency_penalty: number = 0, presence_penalty: number = 0, stop: string[] = ["User: ", "Assistant: "]) {
         this.model = model
-        this.messages = new OAIMessages()
+        this.messages = messages
         for (let i = 0; i < messages.length; i++) {
-            this.messages.add(messages[i])
+            this.messages.push(messages[i])
         }
         this.temperature = temperature
         this.max_tokens = max_tokens

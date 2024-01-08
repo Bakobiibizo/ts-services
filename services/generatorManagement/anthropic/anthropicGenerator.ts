@@ -11,6 +11,7 @@ dotenv.config();
 
 export class AnthropicGenerator extends Generator {
     apiKey: string;
+    completePrompt: string;
 
     constructor() {
         super();

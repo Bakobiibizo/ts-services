@@ -1,20 +1,39 @@
 import { OpenAI } from 'openai';
+import { HTTPClient } from '../HTTPClient';
 
-export interface Message {
-    role: string;
-    content: string;
-}
 
 const openAI = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export class OAIMessage implements Message {
+export class OpenAIAssistant {
     constructor(public role: string, public content: string) { }
 }
 
 export class OpenAIGenerator {
     private agentId: string = "asst_7LqdBFncNN4DarwwLj2JmxuN";
+    prompt: string;
+    systemPrompt: string;
+    url: string;
+    openai: OpenAI;
+    fullResponse: any[];
+    httpClient: any;
+    model: string
+    message: {
+        role: string
+        content: string
+    }
+    contextWindow: []
 
-    constructor() { }
+    constructor() {
+        this.model = "gpt-3.5-turbo-0613";
+        this.prompt = "";
+        this.systemPrompt = '';
+        this.message = { role: "user", content: "" };
+        this.url = "https://api.openai.com/v1/chat/completions";
+        this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, baseURL: this.url });
+        this.fullResponse = [];
+        this.httpClient = new HTTPClient(this.url);
+        this.contextWindow = [];
+    }
 
     public async initializeAgent(
         name: string = "Chatbot",

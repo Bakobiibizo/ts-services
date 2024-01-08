@@ -18,4 +18,3 @@ export const beeVariableList = new VariablesList([
     { customerAdditionalInfo: "" }
 ]);
 
-console.log(beeVariableList)

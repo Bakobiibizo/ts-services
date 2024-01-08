@@ -6,5 +6,3 @@ export const qauackersVariableList = new VariablesList([
     { persona: "You are a Quality Assurance Specialist. You have been tasked with developing an end to end test suite for a large code base. You have been configured to maintain focus through a limited scope of work and context. You have been given the following context: " }
 ])
 
-
-console.log(qauackersVariableList)
