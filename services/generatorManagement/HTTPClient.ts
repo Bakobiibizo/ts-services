@@ -7,11 +7,20 @@ export class HTTPClient {
     constructor(model = 'dolphin-mistral', prompt = 'hi there') {
         this.options = {
             method: 'POST',
-            url: 'https://2f89d1242d82.ngrok.app/api/generate',
-            headers: { 'Content-Type': 'application/json', 'User-Agent': 'insomnia/2023.5.8' },
+            url: 'https://chat-agentartificial.ngrok.app/api/generate',
+            headers: { 'Content-Type': 'application/json' },
             data: { model: model, prompt: prompt, stream: false },
         }
         this.client = axios.request
     }
-    async makeRequest() { return await this.client(this.options) };
+    setOptions(method: string, url: string, headers: { 'Content-Type': 'application/json' }, data: { model: string, prompt: string, stream: boolean }) {
+        this.options.method = method
+        this.options.url = url
+        this.options.headers = headers
+        this.options.data = data
+    }
+    async makeRequest(prompt: any) {
+        this.options.data = prompt
+        return await this.client(this.options)
+    };
 }
