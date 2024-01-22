@@ -11,7 +11,7 @@ export default class DataIngestor {
     static dataMap: any = {};
     static mirrorMap: string = 'data/mirrorMap.json';
 
-    public static generatePathmap(filepath = 'D:/01AgentArtificial/angular-frontend'): void {
+    public static generatePathmap(filepath = 'tests/testPlace/'): void {
         DataIngestor.directoryParser.writeStructureToFile(filepath);
     }
 
@@ -55,7 +55,8 @@ export default class DataIngestor {
     }
 }
 
-// Initialize and process the path map
-DataIngestor.generatePathmap();
-DataIngestor.readPathMap(DataIngestor.directoryParser.filemap);
-DataIngestor.processPathmap(DataIngestor.pathMapContent);
+//// Initialize and process the path map
+//DataIngestor.generatePathmap();
+//DataIngestor.readPathMap(DataIngestor.directoryParser.filemap);
+//DataIngestor.processPathmap(DataIngestor.pathMapContent);
+//

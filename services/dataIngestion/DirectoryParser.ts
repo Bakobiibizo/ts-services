@@ -91,4 +91,3 @@ export class DirectoryParser {
 }
 
 
-new DirectoryParser().writeStructureToFile('D:/01AgentArtificial/angular-frontend');
