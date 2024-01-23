@@ -4,8 +4,8 @@
   "description": "",
   "main": "services/index.js",
   "scripts": {
-    "start": "ts-node services/index.js",
-    "dev": "nodemon ts-node services/index.js"
+    "start": "ts-node services/index.ts",
+    "dev": "nodemon ts-node services/index.ts"
   },
   "keywords": [],
   "author": "",

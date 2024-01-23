@@ -4,11 +4,12 @@ import * as fs from 'fs';
 import { replace_target } from './replaceHtml';
 
 const dparser = new DirectoryParser()
+const targetPath = 'test/login/request-reset-passord'
 dparser.setIgnorePaths()
-dparser.walkFolder('tests/testPlace/')
-dparser.writeStructureToFile('tests/testPlace/')
+dparser.walkFolder(targetPath)
+dparser.writeStructureToFile(targetPath)
 
-DataIngestor.generatePathmap('tests/testPlace/')
+DataIngestor.generatePathmap(targetPath)
 DataIngestor.readPathMap(DataIngestor.directoryParser.filemap);
 DataIngestor.processPathmap(DataIngestor.pathMapContent);
 
@@ -19,7 +20,8 @@ for (const key in data) {
         (async () => {
             const htmlResponse = await replace_target(value).catch(err => console.log(err))
             if (htmlResponse) {
-                fs.writeFileSync(key, htmlResponse)
+                const newValue = value.replace(value, htmlResponse)
+                fs.writeFileSync(key, newValue)
             }
         })()
     }

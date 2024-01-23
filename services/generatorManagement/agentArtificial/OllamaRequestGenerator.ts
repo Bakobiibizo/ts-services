@@ -27,7 +27,7 @@ export class OllamaRequestGenerator extends Generator {
         this.constructMessage("user", prompt)
         let messages = ""
         for (let i of this.contextWindow) {
-            messages += i["role"] + ": " + i["content"] + os.EOL
+            messages += `${i["role"] + ": " + i["content"] + os.EOL}`
         }
         return {
             model: model,
