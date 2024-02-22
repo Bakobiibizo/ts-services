@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { replace_target } from './replaceHtml';
 
 const dparser = new DirectoryParser()
-const targetPath = 'test/login/request-reset-passord'
+const targetPath = 'D:/ts-services/tests/testPlace/src/app'
 dparser.setIgnorePaths()
 dparser.walkFolder(targetPath)
 dparser.writeStructureToFile(targetPath)
