@@ -1,5 +1,5 @@
-import DataIngestor from './dataIngestion/DataIngestor';
-import { DirectoryParser } from './dataIngestion/DirectoryParser';
+import DataIngestor from './data-Ingestor/DataIngestor';
+import { DirectoryParser } from './data-Ingestor/DirectoryParser';
 import * as fs from 'fs';
 import { replace_target } from './replaceHtml';
 

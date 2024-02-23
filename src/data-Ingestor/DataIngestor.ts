@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { extractHtml } from './extractHtml';
 import { extractJSX } from './extractJSX';
-import { parseTypeScript } from './parseTypescript';
+import { extractTSHtmlBlock } from './extractTSHTMLBlock';
 import { DirectoryParser } from './DirectoryParser';
 
 export default class DataIngestor {
@@ -20,7 +20,11 @@ export default class DataIngestor {
         DataIngestor.pathMapContent = JSON.parse(fileContent);
     }
 
-    public static ingestFile(filePath: string): void {
+    public static ingestTSCodeBlocks(filePath: string): void {
+        DataIngestor.dataMap[filePath] = extractTSHTMLBlock(filePath);
+    }
+
+    public static ingestHtmlFile(filePath: string): void {
         const fileExtension = filePath.split('.').pop();
         switch (fileExtension) {
             case 'html':
@@ -34,7 +38,7 @@ export default class DataIngestor {
                 break;
             case 'ts':
             case 'js':
-                DataIngestor.dataMap[filePath] = parseTypeScript(filePath);
+                DataIngestor.dataMap[filePath] = extractTSHtmlBlock(filePath);
                 DataIngestor.directoryParser.createMirrorFile(filePath)
                 break;
             default:
@@ -47,7 +51,7 @@ export default class DataIngestor {
         for (const key in pathmap) {
             const value = pathmap[key];
             if (typeof value === 'string') {
-                DataIngestor.ingestFile(value);
+                DataIngestor.ingestHtmlFile(value);
             } else if (typeof value === 'object') {
                 DataIngestor.processPathmap(value);
             }

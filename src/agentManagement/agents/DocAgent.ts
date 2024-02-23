@@ -1,5 +1,5 @@
 import { Agent } from "../Agents.dt";
-import { DocPromptList } from "../../promptManagement/prompts/docPromptList";
+import { DocPromptList } from "../../promptManagement/prompts/DocPromptList";
 import { DocVariableList } from "../../variableManagement/variables/DocVariablesList";
 const variables = DocVariableList
 const prompts = DocPromptList
