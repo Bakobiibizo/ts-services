@@ -39,13 +39,13 @@ Output Format:
 After collecting all the information, organize it into a JSON object:
 {
   "name": "string",
-    "phone": "number",
-      "moveDate": "string",
-        "fromAddress": "string",
-          "toAddress": "string",
-            "nBedrooms": "number",
-              "nFloors": "number",
-                "additionalDetails": "string"
+  "phone": "number",
+  "moveDate": "string",
+  "fromAddress": "string",
+  "toAddress": "string",
+  "nBedrooms": "number",
+  "nFloors": "number",
+  "additionalDetails": "string"
 } `},
 
   {
