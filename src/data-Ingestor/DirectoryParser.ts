@@ -1,10 +1,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import DataIngestor from './DataIngestor';
+import { extractHtml } from './extractHtml';
+import { extractJSX } from './extractJSX';
+import { extractTSHtmlBlock } from './extractTSHTMLBlock';
+import { extractPythonCode } from './extractPythonCode';
+import { extractRustCode } from './extractRustCode';
 
 export class DirectoryParser {
     paths: string[];
     filemap: string;
+    dataMap: any;
     ignorepaths: string;
     dataFolder: string;
     fileIgnore: string[]
@@ -25,6 +30,45 @@ export class DirectoryParser {
         this.setIgnorePaths();
         this.mirrorFilePath = '';
         this.mirrorDirectory = 'data/mirror';
+    }
+
+    public async determineFiletype(filePath: string): Promise<void> {
+        const fileExtension = filePath.split('.').pop()?.toLowerCase();
+        try {
+            let content: string = '';
+            
+            switch (fileExtension) {
+                case 'html':
+                    content = extractHtml(filePath);
+                    break;
+                case 'tsx':
+                case 'jsx':
+                    content = extractJSX(filePath);
+                    break;
+                case 'ts':
+                case 'js':
+                    content = extractTSHtmlBlock(filePath);
+                    break;
+                case 'py':
+                    content = await extractPythonCode(filePath);
+                    break;
+                case 'rs':
+                    content = await extractRustCode(filePath);
+                    break;
+                case 'json':
+                case 'md':
+                    content = fs.readFileSync(filePath, 'utf8');
+                    break;
+                default:
+                    console.log(`Unsupported file type: ${fileExtension}`);
+                    return;
+            }
+            
+            this.dataMap[filePath] = content;
+            this.createMirrorFile(filePath);
+        } catch (error) {
+            console.error(`Error processing file ${filePath}:`, error);
+        }
     }
 
     public setIgnorePaths() {
@@ -75,19 +119,31 @@ export class DirectoryParser {
         const structure = this.walkFolder(folder);
         fs.writeFileSync(this.filemap, JSON.stringify(structure, null, 2));
     }
+
     public createMirrorFile(originalFilePath: string): string {
-        const originalContent = fs.readFileSync(originalFilePath, 'utf8');
-        const fileName = path.basename(originalFilePath);
-        const mirrorFilePath = path.join(this.mirrorDirectory, fileName);
+        try {
+            const relativePath = path.relative(process.cwd(), originalFilePath);
+            const mirrorPath = path.join(this.mirrorDirectory, relativePath);
+            const mirrorDir = path.dirname(mirrorPath);
 
-        if (!fs.existsSync(this.mirrorDirectory)) {
-            fs.mkdirSync(this.mirrorDirectory, { recursive: true });
+            if (!fs.existsSync(mirrorDir)) {
+                fs.mkdirSync(mirrorDir, { recursive: true });
+            }
+
+            // Only copy the file if it exists and is not a directory
+            if (fs.existsSync(originalFilePath) && !fs.statSync(originalFilePath).isDirectory()) {
+                fs.copyFileSync(originalFilePath, mirrorPath);
+            } else {
+                // If it's a directory, just create the directory in the mirror
+                if (!fs.existsSync(mirrorPath)) {
+                    fs.mkdirSync(mirrorPath, { recursive: true });
+                }
+            }
+            
+            return mirrorPath;
+        } catch (error) {
+            console.error(`Error creating mirror file for ${originalFilePath}:`, error);
+            return '';
         }
-
-        fs.writeFileSync(mirrorFilePath, originalContent);
-        this.mirrorFilePath = mirrorFilePath;
-        return this.mirrorFilePath;
     }
 }
-
-

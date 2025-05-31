@@ -1,17 +1,27 @@
 import * as fs from 'fs';
+import * as path from 'path';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { extractHtml } from './extractHtml';
 import { extractJSX } from './extractJSX';
 import { extractTSHtmlBlock } from './extractTSHTMLBlock';
+import { extractRustCode } from './extractRustCode';
 import { DirectoryParser } from './DirectoryParser';
 
 export default class DataIngestor {
+    static mirrorDirectory = "data/mirror"
+    static createMirrorDirectory(): void {
+        if (!fs.existsSync(DataIngestor.mirrorDirectory)) {
+            fs.mkdirSync(DataIngestor.mirrorDirectory, { recursive: true });
+        }
+    }
+
     static pathMapContent: any;
-    static mirrorDirectory: string = "data/mirror";
     static directoryParser: DirectoryParser = new DirectoryParser();
     static dataMap: any = {};
     static mirrorMap: string = 'data/mirrorMap.json';
 
-    public static generatePathmap(filepath = 'tests/testPlace/'): void {
+    public static generatePathmap(filepath = process.env.TARGET_PATH || 'data/mirrorMap.json'): void {
         DataIngestor.directoryParser.writeStructureToFile(filepath);
     }
 
@@ -21,41 +31,62 @@ export default class DataIngestor {
     }
 
     public static ingestTSCodeBlocks(filePath: string): void {
-        DataIngestor.dataMap[filePath] = extractTSHTMLBlock(filePath);
+        DataIngestor.dataMap[filePath] = extractTSHtmlBlock(filePath);
     }
 
-    public static ingestHtmlFile(filePath: string): void {
-        const fileExtension = filePath.split('.').pop();
-        switch (fileExtension) {
-            case 'html':
-                DataIngestor.dataMap[filePath] = extractHtml(filePath);
-                DataIngestor.directoryParser.createMirrorFile(filePath)
-                break;
-            case 'tsx':
-            case 'jsx':
-                DataIngestor.dataMap[filePath] = extractJSX(filePath);
-                DataIngestor.directoryParser.createMirrorFile(filePath)
-                break;
-            case 'ts':
-            case 'js':
-                DataIngestor.dataMap[filePath] = extractTSHtmlBlock(filePath);
-                DataIngestor.directoryParser.createMirrorFile(filePath)
-                break;
-            default:
-                console.log(`Unsupported file type: ${fileExtension}`);
-        }
-    }
-
-    public static processPathmap(pathmap: any) {
-        fs.writeFileSync(DataIngestor.mirrorMap, JSON.stringify(DataIngestor.dataMap, null, 2))
-        for (const key in pathmap) {
-            const value = pathmap[key];
-            if (typeof value === 'string') {
-                DataIngestor.ingestHtmlFile(value);
-            } else if (typeof value === 'object') {
-                DataIngestor.processPathmap(value);
+    public static async ingestFile(filePath: string): Promise<void> {
+        const fileExtension = filePath.split('.').pop()?.toLowerCase();
+        try {
+            let content: string = '';
+            
+            switch (fileExtension) {
+                case 'html':
+                    content = extractHtml(filePath);
+                    break;
+                case 'tsx':
+                case 'jsx':
+                    content = extractJSX(filePath);
+                    break;
+                case 'ts':
+                case 'js':
+                    content = extractTSHtmlBlock(filePath);
+                    break;
+                case 'rs':
+                    content = await extractRustCode(filePath);
+                    break;
+                default:
+                    console.log(`Unsupported file type: ${fileExtension}`);
+                    return;
             }
+            
+            DataIngestor.dataMap[filePath] = content;
+            DataIngestor.directoryParser.createMirrorFile(filePath);
+        } catch (error) {
+            console.error(`Error processing file ${filePath}:`, error);
         }
+    }
+
+    // Keep the old method for backward compatibility
+    public static ingestHtmlFile(filePath: string): void {
+        console.warn('ingestHtmlFile is deprecated. Use ingestFile instead.');
+        this.ingestFile(filePath).catch(console.error);
+    }
+
+    public static async processPathmap(pathmap: any) {
+        fs.writeFileSync(DataIngestor.mirrorMap, JSON.stringify(DataIngestor.dataMap, null, 2));
+        
+        const processItem = async (key: string, value: any) => {
+            if (typeof value === 'string') {
+                await DataIngestor.ingestFile(value).catch(console.error);
+            } else if (typeof value === 'object') {
+                await DataIngestor.processPathmap(value);
+            }
+        };
+        
+        // Process items in parallel but wait for all to complete
+        await Promise.all(
+            Object.entries(pathmap).map(([key, value]) => processItem(key, value))
+        );
     }
 }
 

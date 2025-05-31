@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist-docs",
+    "rootDir": "./src",
+    "module": "commonjs",
+    "target": "es2018",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/types/wiki-schema.ts",
+    "src/utils/documentation-generator.ts"
+  ],
+  "exclude": ["node_modules", "dist", "dist-docs"]
+}

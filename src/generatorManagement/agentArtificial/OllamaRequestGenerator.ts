@@ -1,6 +1,8 @@
 import { Generator } from '../Generator.dt';
 import { HTTPClient } from '../HTTPClient';
 import * as os from "os";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export class OllamaRequestGenerator extends Generator {
     prompt: string;
@@ -15,7 +17,7 @@ export class OllamaRequestGenerator extends Generator {
         this.prompt = '';
         this.systemPrompt = '';
         this.contextWindow = [];
-        this.url = "https://chat-agentartificial.ngrok.app/api/generate";
+        this.url = process.env.BASE_URL || ""
         this.fullResponse = [];
         this.http = new HTTPClient();
     }
@@ -23,7 +25,7 @@ export class OllamaRequestGenerator extends Generator {
         return this.http.makeRequest(prompt)
     }
 
-    constructFullPrompt(prompt: string, model: string = "ollama-mixtral", temperature: number = 0.7, max_tokens: number = 256, top_p: number = 1, frequency_penalty: number = 0, presence_penalty: number = 0) {
+    constructFullPrompt(prompt: string, model: string = "ollama-mixtral", temperature: number = 0.1, max_tokens: number = 256, top_p: number = 1, frequency_penalty: number = 0, presence_penalty: number = 0) {
         this.constructMessage("user", prompt)
         let messages = ""
         for (let i of this.contextWindow) {

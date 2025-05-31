@@ -1,5 +1,6 @@
 import { BeeAgent } from "./agents/BeeAgent";
-import { QAuackersAgent } from "./agents/QAuackers";
+import { qauackers } from "./agents/QAuackers";
+import { docAgent } from "./agents/DocAgent";
 import { AgentList } from './Agents.dt';
 
-export const AgentManager = new AgentList([QAuackersAgent, BeeAgent])
+export const AgentManager = new AgentList([qauackers, BeeAgent, docAgent])

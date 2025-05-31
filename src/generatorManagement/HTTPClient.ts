@@ -1,13 +1,14 @@
 import axios from "axios";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export class HTTPClient {
     private client
     options: any
 
-    constructor(model = 'dolphin-mistral', prompt = 'hi there') {
-        this.options = {
+    constructor(model = process.env.MODEL, prompt = 'hi there') {      this.options = {
             method: 'POST',
-            url: 'https://chat-agentartificial.ngrok.app/api/generate',
+            url: process.env.BASE_URL,
             headers: { 'Content-Type': 'application/json' },
             data: { model: model, prompt: prompt, stream: false },
         }

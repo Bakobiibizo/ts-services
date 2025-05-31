@@ -1,6 +1,11 @@
-import { qauackers } from "./agentManagement/agents/QAuackers";
-import { OllamaRequestGenerator } from './generatorManagement/agentArtificial/OllamaRequestGenerator';
+
 import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+
+import { OllamaRequestGenerator } from './generatorManagement/agentArtificial/OllamaRequestGenerator';
+import { AgentManager } from './agentManagement/AgentManager';
+
+dotenv.config();
 
 //console.log(qauackers)
 
@@ -8,9 +13,9 @@ export async function replace_target(target: string) {
 
     const ollama = new OllamaRequestGenerator()
 
-    ollama.setModel("dolphin-mixtral")
-    ollama.setSystemPrompt(qauackers.variableList.getItems()[2]["persona"])
-    ollama.setPrompt(qauackers.promptList.getItems()[0]["IDENTIFY_HTML"], "system")
+    ollama.setModel(process.env.MODEL || "llama4")
+    ollama.setSystemPrompt(AgentManager.getItems()[2].variableList.getItems()[2]["persona"])
+    ollama.setPrompt(AgentManager.getItems()[2].promptList.getItems()[0]["CODE_DOCUMENTATION_SYSTEM_PROMPT"], "system")
 
 
 

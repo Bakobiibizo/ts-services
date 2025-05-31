@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import * as dotenv from 'dotenv';
 import { HTTPClient } from '../HTTPClient';
 import { ChatCompletionContentPartImage, ChatCompletionFunctionMessageParam, ChatCompletionMessageParam, ChatCompletionMessage, ChatCompletionUserMessageParam } from 'openai/resources';
+import { OAIMessage } from "./OAIRequest.dt";
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ export class OAIGenerator extends Generator {
     openai: OpenAI;
     fullResponse: any[];
     httpClient: HTTPClient;
-    contextWindow: []
+    contextWindow: any[] = []
     temperature: number
     max_tokens: number
     top_p: number
@@ -31,22 +32,25 @@ export class OAIGenerator extends Generator {
         this.fullResponse = [];
         this.httpClient = new HTTPClient(this.url);
         this.contextWindow = [];
-        this.temperature = 0.2
+        this.temperature = 0.1
         this.max_tokens = 32000
         this.top_p = 1
         this.frequency_penalty = 0
         this.presence_penalty = 0
     }
 
-    setPrompt(prompt: string) {
+    setPrompt(prompt: string): any{
         this.prompt = prompt
         const message = this.constructMessage("user", prompt)
         this.contextWindow.push(message)
         return message
     }
 
-    setSystemPrompt(prompt: string) {
+    setSystemPrompt(prompt: string): any {
         this.systemPrompt = prompt
+        const message = this.constructMessage("system", prompt)
+        this.contextWindow.push(message)
+        return message
     }
 
     setModel(model: string) {
@@ -73,21 +77,19 @@ export class OAIGenerator extends Generator {
         this.presence_penalty = presence_penalty
     }
 
-    constructMessageParam(role: "function" | "system" | "user" | "assistant" | "tool", content: string, name?: string) {
-        const message = {
+    constructMessageParam(role: "function" | "system" | "user" | "assistant" | "tool", content: string, name?: string): any {
+        return {
             role: role,
             content: content,
             name: name ? name : ""
         }
-        return message
     }
 
 
     constructFullPrompt(model: string = "ollama-mixtral", temperature: number = 0.7, max_tokens: number = 256, top_p: number = 1, frequency_penalty: number = 0, presence_penalty: number = 0) {
-        const messages = [this.constructMessage("system", this.systemPrompt), ...this.contextWindow, this.constructMessage("user", this.prompt)];
         return {
             model: model,
-            messages: messages,
+            messages: this.contextWindow,
             temperature: temperature,
             max_tokens: max_tokens,
             top_p: top_p,

@@ -1,6 +1,4 @@
-import { ChatCompletionStreamingRunner } from 'openai/lib/ChatCompletionStreamingRunner';
-import { ChatCompletionMessageParam, ChatCompletion, ChatCompletionMessage, ChatCompletionFunctionMessageParam } from 'openai/resources';
-import { MessageCreateParams, Messages } from 'openai/resources/beta/threads/messages/messages';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 export class OAIMessage {
     constructor(public role: "assistant" | "user" | "system" | "function" | "tool", public content: string, public name?: string) {
@@ -9,8 +7,8 @@ export class OAIMessage {
         this.name = name
     }
 
-    createMessage(role: string, content: string, name?: string) {
-        this.role = "assistant" || role
+    createMessage(role: "assistant" | "user" | "system" | "function" | "tool", content: string, name?: string) {
+        this.role = role 
         this.content = content
         this.name = name ?? undefined
         const message = {

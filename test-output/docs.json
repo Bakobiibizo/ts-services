@@ -1,0 +1,43 @@
+{
+  "project": {
+    "name": "Test Project",
+    "description": "A test project",
+    "version": "1.0.0",
+    "repository": "https://github.com/example/test-project",
+    "last_updated": "2025-05-31T20:46:16.788Z",
+    "documentation_status": "draft",
+    "coverage": 1
+  },
+  "modules": [
+    {
+      "name": "components",
+      "description": "UI Components",
+      "status": "documented",
+      "version_added": "1.0.0",
+      "complexity": "medium",
+      "last_updated": "2025-05-31T20:46:16.788Z",
+      "components": [
+        {
+          "type": "component",
+          "name": "Button",
+          "description": "A reusable button component",
+          "status": "documented",
+          "last_updated": "2025-05-31T20:46:16.788Z",
+          "file": "src/components/Button.tsx",
+          "props": [
+            {
+              "name": "variant",
+              "type": "string",
+              "description": "The visual style of the button",
+              "default": "primary",
+              "required": false
+            }
+          ]
+        }
+      ],
+      "coverage": 1
+    }
+  ],
+  "last_updated": "2025-05-31T20:46:16.788Z",
+  "schema_version": "1.0.0"
+}

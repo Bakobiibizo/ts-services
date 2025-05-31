@@ -7,15 +7,15 @@ export class Generator {
     prompt: string
     systemPrompt: string
     message: {}
-    contextWindow: any[]
+    contextWindow: Object[]
     url: string
 
     constructor() {
         this.model = ""
         this.prompt = ""
         this.systemPrompt = ""
-        this.contextWindow = []
-        this.url = "https://api.openai.com/v1/chat/completions" //"https://2f89d1242d82.ngrok.app/api/chat"
+        this.contextWindow = [{}]
+        this.url = "https://api.openai.com/v1/chat/completions" 
         this.message = {}
 
     }
